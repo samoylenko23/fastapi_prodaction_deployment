@@ -1,0 +1,34 @@
+data:
+  data_path: "/home/mle-user/mle-project-sprint-3-v001/data/dataset.csv"
+  splitting_params:
+    test_size: 0.3
+    random_state: 42
+
+features:
+  features:
+    - 'building_type_int'
+    - 'latitude'
+    - 'longitude'
+    - 'ceiling_height'
+    - 'flats_count'
+    - 'floors_total'
+    - 'has_elevator'
+    - 'floor'
+    - 'kitchen_area'
+    - 'living_area'
+    - 'rooms'
+    - 'is_apartment'
+    - 'total_area'
+    - 'price'
+    - 'build_year'
+  target: 'price'
+
+model:
+  save_path: "/home/mle-user/mle-project-sprint-3-v001/models/DT.pickle"   
+  metric_path: "/home/mle-user/mle-project-sprint-3-v001/models/metrics.json"
+  model: "DecisionTree"
+  model_params:
+    max_depth: 19
+    min_samples_leaf: 2
+    min_samples_split: 3
+    criterion: 'squared_error'

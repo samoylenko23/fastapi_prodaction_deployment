@@ -1,0 +1,3 @@
+model: "/home/mle-user/mle-project-sprint-3-v001/models/DT.pickle"
+data_path: "/home/mle-user/mle-project-sprint-3-v001/data/dataset.csv"
+result_path: "/home/mle-user/mle-project-sprint-3-v001/data/prediction.csv"
