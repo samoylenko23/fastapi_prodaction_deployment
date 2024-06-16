@@ -2,7 +2,6 @@ import logging
 import pandas as pd
 from geopy.distance import geodesic
 
-from learn_model.entites.model_params import FeatureParams
 
 logger = logging.getLogger(__name__)
 

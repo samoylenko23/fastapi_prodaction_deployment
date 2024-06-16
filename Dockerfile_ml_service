@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+LABEL author = ${AUTHOR}
+COPY . /services
+WORKDIR services
+RUN pip install -r requirements.txt
+WORKDIR /services/services/app_ml
+EXPOSE ${PORT_DOCKER}
+VOLUME /services/
+CMD uvicorn app:app --reload --port ${PORT_DOCKER} --host 0.0.0.0

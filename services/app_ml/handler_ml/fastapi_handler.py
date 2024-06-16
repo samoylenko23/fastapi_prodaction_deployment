@@ -1,11 +1,6 @@
 import logging
-import os
-import sys
 from collections import OrderedDict
 
-# Добавляем корневой каталог в sys.path
-sys.path.append(os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '../../')))
 logger = logging.getLogger(__name__)
 
 import numpy as np
@@ -13,7 +8,7 @@ import pandas as pd
 from fastapi import HTTPException
 from pydantic import ValidationError
 
-from data_utils import (
+from utils.data_utils import (
     get_best_features,
     get_model,
     get_transform,
@@ -21,7 +16,6 @@ from data_utils import (
     OutputData
 )
 from learn_model.features.handcrafted_features import HandCraftFeatures
-
 
 
 class FastApiHandler:

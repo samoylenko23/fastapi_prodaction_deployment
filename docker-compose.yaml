@@ -1,0 +1,12 @@
+services:
+  app_ml:
+    env_file:
+      - ./.env
+    build:
+      dockerfile: Dockerfile_ml_service
+    ports:
+      - "${PORT_DOCKER}:${PORT_DOCKER}"
+    volumes:
+      - type: bind
+        source: ./models
+        target:  /services/models

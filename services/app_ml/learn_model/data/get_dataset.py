@@ -4,7 +4,7 @@ from typing import Tuple
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from learn_model.entites.model_params import DatasetParams, SplittingParams
+from services.app_ml.learn_model.entites.model_params import DatasetParams, SplittingParams
 
 # возьмет имя модуля из атрибута __name__
 logger = logging.getLogger(__name__)

@@ -1,5 +1,5 @@
 data:
-  data_path: "/home/mle-user/mle-project-sprint-3-v001/data/dataset.csv"
+  data_path: "/home/mle-user/model_prodaction_deployment/data/dataset.csv"
   splitting_params:
     test_size: 0.3
     random_state: 42
@@ -24,8 +24,8 @@ features:
   target: 'price'
 
 model:
-  save_path: "/home/mle-user/mle-project-sprint-3-v001/models/DT.pickle"   
-  metric_path: "/home/mle-user/mle-project-sprint-3-v001/models/metrics.json"
+  save_path: "/home/mle-user/model_prodaction_deployment/services/app_ml/models/DT.pickle"   
+  metric_path: "/home/mle-user/model_prodaction_deployment/services/app_ml/models/metrics.json"
   model: "DecisionTree"
   model_params:
     max_depth: 19

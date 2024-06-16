@@ -1,16 +1,29 @@
 import logging
-
+import os
 from fastapi import FastAPI, HTTPException
 import uvicorn
 
-from data_utils import InputData, OutputData
-from fastapi_handler import FastApiHandler
+import sys
+import os
+
+# Добавляем корневую директорию проекта в sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+from utils.data_utils import InputData, OutputData
+from handler_ml.fastapi_handler import FastApiHandler
 
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 handler = None
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Создаем пути к файлам моделей
+model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
+transform_path = os.path.join(BASE_DIR, 'models', 'transformer.pkl')
+best_feature_path = os.path.join(BASE_DIR, 'models', 'best_features.txt')
 
 # Функция, срабатывающая при запуске сервера
 
@@ -19,9 +32,9 @@ handler = None
 def startup():
     try:
         global handler
-        handler = FastApiHandler(model_path='/home/mle-user/mle-project-sprint-3-v001/models/model.pkl',
-                                 transform_path='/home/mle-user/mle-project-sprint-3-v001/models/transformer.pkl',
-                                 best_feature_path='/home/mle-user/mle-project-sprint-3-v001/models/best_features.txt')
+        handler = FastApiHandler(model_path=model_path,
+                         transform_path=transform_path,
+                         best_feature_path=best_feature_path)
     except Exception as e:
         logger.error("Ошибка загрузки моделей")
         raise ImportError("Проверьте правильностей путей загрузки моделей")

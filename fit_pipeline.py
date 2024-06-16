@@ -3,19 +3,17 @@ import click
 import os
 import joblib
 import pandas as pd
-from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import r2_score
 
-from learn_model.data.get_dataset import get_data
-from learn_model.entites.model_params import get_train_params
-from learn_model.features.handcrafted_features import HandCraftFeatures
-from learn_model.features.build_features import Transformer
-from learn_model.features.feature_selection import FeatureSelection
+from services.app_ml.learn_model.data.get_dataset import get_data
+from services.app_ml.learn_model.entites.model_params import get_train_params
+from services.app_ml.learn_model.features.handcrafted_features import HandCraftFeatures
+from services.app_ml.learn_model.features.build_features import Transformer
+from services.app_ml.learn_model.features.feature_selection import FeatureSelection
 
-PATH_ARTIFACT = "/home/mle-user/mle-project-sprint-3-v001/models"
+PATH_ARTIFACT = "models"
+
 logger = logging.getLogger(__name__)
-
 
 def train_model_pipeline(config_path):
     logger.info(msg='Старт обучения')
@@ -34,7 +32,6 @@ def train_model_pipeline(config_path):
     transformer.fit(train_df.drop(['price'], axis=1), train_df['price'])
 
     y_train = train_df['price']
-    y_test = test_df['price']
 
     X_train = transformer.transform(train_df.drop(['price'], axis=1))
     X_test = transformer.transform(test_df.drop(['price'], axis=1))

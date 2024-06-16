@@ -1,11 +1,14 @@
 import logging
 import pandas as pd
 import numpy as np
+import sys
+import os
+
+# Добавляем корневую директорию проекта в sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
-from sklearn.model_selection import (KFold, RandomizedSearchCV,
-                                     cross_validate, train_test_split)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import (KBinsDiscretizer, OneHotEncoder,
                                    PolynomialFeatures, SplineTransformer,
@@ -13,11 +16,11 @@ from sklearn.preprocessing import (KBinsDiscretizer, OneHotEncoder,
 from autofeat import AutoFeatRegressor
 from category_encoders import CatBoostEncoder
 
-from learn_model.entites.model_params import FeatureParams
-from learn_model.features.handcrafted_features import HandCraftFeatures
-from learn_model.entites.feature_enginering_params import get_feature_engineering_params
+from services.app_ml.learn_model.entites.model_params import FeatureParams
+from services.app_ml.learn_model.entites.feature_enginering_params import get_feature_engineering_params
 
-PATH_YAML_FE = "/home/mle-user/mle-project-sprint-3-v001/config/config_feature_engineering.yaml"
+PATH_BASE_DIR = os.path.dirname(os.path.abspath(__name__))
+PATH_YAML_FE = os.path.join(PATH_BASE_DIR, 'services/app_ml/config', 'config_feature_engineering.yaml')
 
 logger = logging.Logger(__name__)
 
