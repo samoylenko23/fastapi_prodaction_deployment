@@ -4,6 +4,6 @@ COPY . /services
 WORKDIR services
 RUN pip install -r requirements.txt
 WORKDIR /services/services/app_ml
-EXPOSE ${PORT_DOCKER}
+EXPOSE ${PORT_DOCKER_ML}
 VOLUME /services/
-CMD uvicorn app:app --reload --port ${PORT_DOCKER} --host 0.0.0.0
+CMD uvicorn app:app --reload --port ${PORT_DOCKER_ML} --host 0.0.0.0

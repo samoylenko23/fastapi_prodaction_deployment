@@ -1,6 +1,8 @@
 import logging
 import os
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Histogram, Counter, Summary
 import uvicorn
 
 import sys
@@ -11,15 +13,30 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 
 from utils.data_utils import InputData, OutputData
 from handler_ml.fastapi_handler import FastApiHandler
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app)
+
+# метрика для подсчета предсказаний больших 10 и 20 млн
+main_app_bigger_prediction = Histogram(
+    "main_app_bigger_prediction",
+    "Histogram of bigger prediction anomaly",
+    buckets=[10000000, 20000000]
+)
+
+# Создаем Summary для хранения предсказаний
+prediction_summary = Summary('prediction_summary', 'Summary of predictions')
+
+# Создаем Counter для учета ошибок
+error_counter = Counter('error_counter', 'Count of errors')
 handler = None
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Создаем пути к файлам моделей
 model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
 transform_path = os.path.join(BASE_DIR, 'models', 'transformer.pkl')
@@ -46,17 +63,21 @@ def main():
     return "Готов к предсказаниям :)"
 
 # Функция, которая получает данные в post-запросе и возвращает предсказание
-
-
 @app.post("/predict", response_model=OutputData)
 def predict(request: InputData):
     try:
-        prediction = handler.handle(request.model_dump())
+        logger.info(f"Received request data: {request.dict()}")
+        prediction = handler.handle(request.dict())
+        # Добавляем предсказание в Summary
+        prediction_summary.observe(prediction.predicted_value)
+        main_app_bigger_prediction.observe(prediction.predicted_value)
     except Exception as e:
-        raise HTTPException(  # Если что-то идёт не так, выдаём ошибку и код 500
+        error_counter.inc()
+        raise HTTPException(
             status_code=500,
-            detail=f"Error: something went wrong while prediction {e}")
-    logger.info(msg="Предсказание выполнено успешно")
+            detail=f"Error: something went wrong while prediction {e}"
+        )
+    logger.info("Предсказание выполнено успешно")
     return prediction
 
 

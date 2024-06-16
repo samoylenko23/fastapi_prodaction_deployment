@@ -5,8 +5,33 @@ services:
     build:
       dockerfile: Dockerfile_ml_service
     ports:
-      - "${PORT_DOCKER}:${PORT_DOCKER}"
+      - "${PORT_DOCKER_ML}:${PORT_DOCKER_ML}"
     volumes:
       - type: bind
         source: ./models
         target:  /services/models
+    hostname: ml_service
+
+
+  prometheus:
+    image: prom/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}" 
+    volumes:
+      - "./services//prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+    hostname: prometheus
+    
+
+
+  grafana:
+    image: grafana/grafana
+    env_file:
+      - ./.env
+    ports:
+      - "${PORT_GRAFANA}:${PORT_GRAFANA}" 
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    hostname: grafana

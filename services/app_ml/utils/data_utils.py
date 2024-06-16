@@ -6,27 +6,29 @@ import pandas as pd
 
 
 class InputData(BaseModel):
+    """Описание модели входящих данных в запросе"""
+
     building_type_int: int = Field(default=6)
     latitude: float = Field(default=55.71711349487305)
     longitude: float = Field(default=37.78112030029297)
     ceiling_height: float = Field(
         default=2.640000104904175, description="Высота потолка", gt=1, lt=1e2)
     flats_count: int = Field(
-        default=84, description="Количество квартир", gt=1, lt=2000)
+        default=100, description="Количество квартир", gt=1, lt=2000)
     floors_total: int = Field(
-        default=12, description="Общее количество этажей", gt=1, lt=100)
+        default=15, description="Общее количество этажей", gt=1, lt=100)
     has_elevator: bool = Field(default=True, description="Наличие лифта")
-    floor: int = Field(default=9, description="Этаж", gt=1, lt=100)
-    kitchen_area: float = Field(default=9.899999, description="Площадь кухни")
-    living_area: float = Field(default=19.899999, description="Жилая площадь")
+    floor: int = Field(default=12, description="Этаж", gt=1, lt=100)
+    kitchen_area: float = Field(default=119.899999, description="Площадь кухни")
+    living_area: float = Field(default=200.899999, description="Жилая площадь")
     rooms: int = Field(
         default=1, description="Количество комнат", gt=0, lt=1e2)
     is_apartment: bool = Field(
         default=True, description="Является ли квартира апартаментами")
     total_area: float = Field(
-        default=35.099998, description="Общая площадь", gt=1, lt=1e4)
+        default=39.099998, description="Общая площадь", gt=1, lt=1e4)
     build_year: int = Field(
-        default=1965, description="Год постройки", gt=1800, lt=2030)
+        default=2000, description="Год постройки", gt=1800, lt=2030)
 
     @staticmethod
     def check_feature_names(data: Dict[str, Union[float, int, str]]):
@@ -65,6 +67,7 @@ class InputData(BaseModel):
 
 
 class OutputData(BaseModel):
+    """Описание модели выходящих данных после запроса"""
     predicted_value: float
 
 
