@@ -23,7 +23,7 @@ pip install -r requirements.txt
 Для запуска FastAPI микросервиса в виртуальном окружении необходимо запустить скрипт app.py:
 
 ```
-python3 /services/app_ml/app.py
+python3 services/app_ml/app.py
 ```
 
 Запустится unicorn. Для тестирования работы приложения откройте новый терминал и отправьте тестовый запрос через curl:
@@ -52,20 +52,6 @@ curl -X POST "http://127.0.0.1:8000/predict" -H "Content-Type: application/json"
 
 **Для запуска FastAPI микросервиса в контейнере необходимо:**
 
-Dockerfile:
-
-```
-FROM python:3.11-slim
-LABEL author = ${AUTHOR}
-COPY . /services
-WORKDIR services
-RUN pip install -r requirements.txt
-WORKDIR /services/services/app_ml
-EXPOSE ${PORT_DOCKER_ML}
-VOLUME /services/
-CMD uvicorn app:app --reload --port ${PORT_DOCKER_ML} --host 0.0.0.0
-```
-
 Собрать образ:
 
 ```
@@ -74,14 +60,14 @@ docker build -f Dockerfile_ml_service --tag ml_service:1 .
 
 Запустить контейнер:
 ```
-docker run --publish 8081:8081 --volume=./models:/services/models --env_file .env ml_service:1
+docker run --publish 8081:8081 --volume=./models:/services/models --env-file .env ml_service:1
 
 ```
 
 Запустится контейнер с сервисом. Для тестирования работы приложения откройте новый терминал и отправьте тестовый запрос через curl:
 
 ```
-curl -X POST "http://127.0.0.1:8000/predict" -H "Content-Type: application/json" -d '{
+curl -X POST "http://127.0.0.1:8081/predict" -H "Content-Type: application/json" -d '{
     "building_type_int": 6,
     "latitude": 55.71711349487305,
     "longitude": 37.78112030029297,
@@ -100,24 +86,6 @@ curl -X POST "http://127.0.0.1:8000/predict" -H "Content-Type: application/json"
 ```
 
 **Для запуска FastAPI микросервиса с помощью Docker compose необходимо:**
-
-Содержимое docker-compose.yaml для ml-приложения:
-```
-services:
-  app_ml:
-    env_file:
-      - ./.env
-    build:
-      dockerfile: Dockerfile_ml_service
-    ports:
-      - "${PORT_DOCKER_ML}:${PORT_DOCKER_ML}"
-    volumes:
-      - type: bind
-        source: ./models
-        target:  /services/models
-    hostname: ml_service
-
-```
 
 Собрать образ и запустить контейнер:
 
