@@ -5,22 +5,22 @@ import joblib
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
 
-from services.app_ml.learn_model.data.get_dataset import get_data
-from services.app_ml.learn_model.entites.model_params import get_train_params
-from services.app_ml.learn_model.features.handcrafted_features import HandCraftFeatures
-from services.app_ml.learn_model.features.build_features import Transformer
-from services.app_ml.learn_model.features.feature_selection import FeatureSelection
+from app_ml.learn_model.data.get_dataset import get_data
+from app_ml.learn_model.preprocess_params.model_params import get_train_params
+from app_ml.learn_model.features.handcrafted_features import HandCraftFeatures
+from app_ml.learn_model.features.build_features import Transformer
+from app_ml.learn_model.features.feature_selection import FeatureSelection
 
-PATH_ARTIFACT = "models"
+PATH_ARTIFACT = "app_ml/models"
 
 logger = logging.getLogger(__name__)
 
 def train_model_pipeline(config_path):
-    logger.info(msg='Старт обучения')
+    logger.info(msg='Start Training...')
 
     params = get_train_params(config_path)
     train_df, test_df = get_data(params.data)
-    logger.info(msg='Данные получены')
+    logger.info(msg='Load Data')
 
     train_df = HandCraftFeatures().create_feature(train_df)
     train_df = train_df.drop(['id', 'id_build_flat'], axis=1)
@@ -49,7 +49,7 @@ def train_model_pipeline(config_path):
     X_test = X_test.iloc[:, list(best_features)]
 
     model.fit(X_train, y_train)
-    logger.info(msg='Модель обучена')
+    logger.info(msg='Fit model')
 
     # Создаем директорию, если она не существует
     os.makedirs(PATH_ARTIFACT, exist_ok=True)   
@@ -68,7 +68,7 @@ def train_model_pipeline(config_path):
     model_path = os.path.join(PATH_ARTIFACT, 'model.pkl')
     joblib.dump(model, model_path)
 
-    logger.info(msg='Модель, лучшие фичи и трансформер сохранены')
+    logger.info(msg='model, best features and transformer save')
 
 
 @click.command()

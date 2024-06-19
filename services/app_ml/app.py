@@ -13,20 +13,20 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 
 from utils.data_utils import InputData, OutputData
 from handler_ml.fastapi_handler import FastApiHandler
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-instrumentator = Instrumentator()
-instrumentator.instrument(app).expose(app)
+# Создаем пути к файлам моделей
+model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
+transform_path = os.path.join(BASE_DIR, 'models', 'transformer.pkl')
+best_feature_path = os.path.join(BASE_DIR, 'models', 'best_features.txt')
 
 # метрика для подсчета предсказаний больших 10 и 20 млн
 main_app_bigger_prediction = Histogram(
     "main_app_bigger_prediction",
     "Histogram of bigger prediction anomaly",
-    buckets=[10000000, 20000000]
+    buckets=[1e7, 2e7]
 )
 
 # Создаем Summary для хранения предсказаний
@@ -37,14 +37,11 @@ error_counter = Counter('error_counter', 'Count of errors')
 handler = None
 
 
-# Создаем пути к файлам моделей
-model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
-transform_path = os.path.join(BASE_DIR, 'models', 'transformer.pkl')
-best_feature_path = os.path.join(BASE_DIR, 'models', 'best_features.txt')
+app = FastAPI()
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app)
 
 # Функция, срабатывающая при запуске сервера
-
-
 @app.on_event("startup")
 def startup():
     try:

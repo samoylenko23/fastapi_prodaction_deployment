@@ -45,13 +45,13 @@ class FastApiHandler:
         # поэтому упорядочим словарь в нужном для модели виде
         data_ordered = OrderedDict((key, data[key]) for key in ordered_params)
         data = pd.DataFrame([data_ordered])
-        logger.info("Данные получены")
+        logger.info("Get Data")
         data = self.hand_craft_feature.create_feature(data)
         print(data)
         X_data = self.transform.transform(data)
-        logger.info("Данные трансформированы")
+        logger.info("Transform Data")
         X_data_with_best_feature = X_data.iloc[:, list(self.best_features_idx)]
-        logger.info("Выбраны лучшие признаки")
+        logger.info("Select Best Features")
         # избавляемся от логарифмированного таргета
         return np.round(np.exp(self.model.predict(X_data_with_best_feature)), 2)[0]
 

@@ -116,35 +116,6 @@ curl -X POST "http://127.0.0.1:8081/predict" -H "Content-Type: application/json"
 
 ### 3. Настройка Ptometheus и Grafana
 
-Добавляем в docker-compose.yaml описание еще двух сервисов:
-
-```
-
-  prometheus:
-    image: prom/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}" 
-    volumes:
-      - "./services//prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
-    hostname: prometheus
-    
-
-
-  grafana:
-    image: grafana/grafana
-    env_file:
-      - ./.env
-    ports:
-      - "${PORT_GRAFANA}:${PORT_GRAFANA}" 
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-    hostname: grafana
-
-```
-
 Также для работы prometheus напишем собственный конфиг prometheus.yml, который подключается в качестве тома в Docker:
 
 ```

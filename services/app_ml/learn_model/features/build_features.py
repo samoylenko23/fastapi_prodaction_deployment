@@ -16,11 +16,11 @@ from sklearn.preprocessing import (KBinsDiscretizer, OneHotEncoder,
 from autofeat import AutoFeatRegressor
 from category_encoders import CatBoostEncoder
 
-from services.app_ml.learn_model.entites.model_params import FeatureParams
-from services.app_ml.learn_model.entites.feature_enginering_params import get_feature_engineering_params
+from app_ml.learn_model.preprocess_params.model_params import FeatureParams
+from app_ml.learn_model.preprocess_params.feature_enginering_params import get_feature_engineering_params
 
 PATH_BASE_DIR = os.path.dirname(os.path.abspath(__name__))
-PATH_YAML_FE = os.path.join(PATH_BASE_DIR, 'services/app_ml/config', 'config_feature_engineering.yaml')
+PATH_YAML_FE = os.path.join(PATH_BASE_DIR, 'app_ml/config', 'config_feature_engineering.yaml')
 
 logger = logging.Logger(__name__)
 
